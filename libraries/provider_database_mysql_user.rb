@@ -147,6 +147,7 @@ class Chef
 
                 redacted_sql = redact_password(repair_sql, new_resource.password)
                 Chef::Log.debug("#{@new_resource}: granting with sql [#{redacted_sql}]")
+                puts "Alejandro #{repair_sql}"
                 repair_client.query(repair_sql)
                 repair_client.query('FLUSH PRIVILEGES')
               ensure

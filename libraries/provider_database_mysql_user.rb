@@ -59,6 +59,7 @@ class Chef
                                 end
                 end
 
+                puts "Alejandro #{repair_sql}"
                 repair_client.query(repair_sql)
               ensure
                 close_repair_client

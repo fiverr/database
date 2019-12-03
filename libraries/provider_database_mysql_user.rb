@@ -335,7 +335,7 @@ class Chef
             test_sql += if new_resource.password.is_a? HashedPassword
                           "AND authentication_string='#{new_resource.password}'"
                         else
-                          "AND authentication_string=SHA2('#{new_resource.password}', 256)"
+                          "AND authentication_string=CONCAT('*', UPPER(SHA1(UNHEX(SHA1('#{new_resource.password}')))))"
                         end
           end
           test_client.query(test_sql).size > 0

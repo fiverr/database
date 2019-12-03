@@ -19,6 +19,8 @@
 
 require File.join(File.dirname(__FILE__), 'provider_database_mysql')
 
+Chef::Log.level = :debug
+
 class Chef
   class Provider
     class Database
@@ -57,6 +59,7 @@ class Chef
                                   " '#{new_resource.password}'"
                                 end
                 end
+                Chef::Log.debug("#{@new_resource}: creating with sql [#{repair_sql}]")
                 repair_client.query(repair_sql)
               ensure
                 close_repair_client
@@ -72,7 +75,7 @@ class Chef
           user_present = nil
           begin
             test_sql = 'SELECT User,Host'
-            test_sql += ' from mysql.user'
+            test_sql += ' FROM mysql.user'
             test_sql += " WHERE User='#{new_resource.username}'"
             test_sql += " AND Host='#{new_resource.host}'"
             test_sql_results = test_client.query test_sql

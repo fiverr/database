@@ -329,11 +329,11 @@ class Chef
           else
             test_sql = 'SELECT User,Host,authentication_string FROM mysql.user ' \
                        "WHERE User='#{new_resource.username}' AND Host='#{new_resource.host}' " \
-                       "AND plugin='mysql_native_password' "
+                       "AND plugin='caching_sha2_password' "
             test_sql += if new_resource.password.is_a? HashedPassword
                           "AND authentication_string='#{new_resource.password}'"
                         else
-                          "AND authentication_string=PASSWORD('#{new_resource.password}')"
+                          "AND authentication_string=SHA2('#{new_resource.password}', 256)"
                         end
           end
           test_client.query(test_sql).size > 0
@@ -354,7 +354,7 @@ class Chef
                 # http://dev.mysql.com/doc/refman/5.7/en/set-password.html
                 repair_sql = "ALTER USER '#{new_resource.username}'@'#{new_resource.host}' "
                 repair_sql += if new_resource.password.is_a? HashedPassword
-                                "IDENTIFIED WITH mysql_native_password AS '#{new_resource.password}'"
+                                "IDENTIFIED WITH caching_sha2_password AS '#{new_resource.password}'"
                               else
                                 "IDENTIFIED BY '#{new_resource.password}'"
                               end
